@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script>
+	//
+	// 思路：
+	// 1.判断输入值是否大于整数范围
+	// 2.判断输入值是否为负，负则取绝对值
+	// 3.将整数转换为字符串(toString())
+	// 4.字符串转换为数组(split(""))
+	// 5.数组反转操作(reverse())
+	// 6.反转后的数组转换为字符串
+	// 7.字符串再转换为整数
+	// 8.判断反转值是否大于整数范围
+	// 9.若输入值为负，则添加负号，正则直接输出
+	//
+	// 要点：
+	// 1.32位整数范围为(-2^31 ~ 2^31-1),判断输入值和反转值是否大于范围
+	// 2.判断输入值是否为负
+	//
+    /**
+     * @param {number} x
+     * @return {number}
+     */
+    var reverse = function(x) {
+    	var MAX_VALUE = Math.pow(2,31)-1;
+        if (Math.abs(x) > MAX_VALUE) return 0;
+        var a = x < 0 ? Math.abs(x) : x;
+        var arr = a.toString().split("").reverse();
+        var result = parseInt(arr.join(""));
+        if (result > MAX_VALUE) return 0;
+        return x < 0 ? -result : result;
+    };
+    console.log(reverse(123))
+    </script>
+</body>
+
+</html>

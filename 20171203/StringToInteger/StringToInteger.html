@@ -7,39 +7,57 @@
 
 <body>
 	<script>
+		/*
+
+		思路：
+		1.去除字符串两端空白符
+		2.定义变量(i:字符串数组索引，sign:标志第一个字符为+或者-，numArr:储存字符串中符合要求的数字，num:由numArr转换得到的数字，初始值为0)
+		3.判断第一个字符是否为+或者-，+则sign为"+",-则sign为"-"，然后i++从跳过第一位的遍历
+		4.遍历字符串，若字符的asiic码在48到57之间，即为0-9，则将字符添加到numArr;若不是0-9之间，判断标志位是否为初始值，即第一个字符不为+或-，并且numArr的长度为0，若是则返回0，若否则退出循环
+		5.遍历numArr，将其转换为数字num
+		6.若sign为"-"，判断数字是否大于2147483648，若大于则返回-2147483648；若sign为初始值或为"+"，判断数字是否大于2147483647，若大于则返回2147483647
+		
+		要点：
+		1.这个函数在第一个非空白字符出现可以丢弃尽量多的空白字符。然后从这个非空白字符开始，获取一个初始的加号或者减号，然后之后的数字字符会被转成一个数。
+		2.这个字符串在形成一个数之后可以包含其他字符，函数应该不受他们影响并忽略它们。
+		3.如果第一个非空白字符不是一个合法的数字字符，或者这个序列不存在即为空或者全为空白字符，不进行任何转换。
+		4.如果没有进行转换，函数应该返回0值。如果正确的数值越界了，应该返回2147483647或者-2147483648。
+
+		*/
+
 		/**
 		* @param {string} str
 		* @return {number}
 		*/
 		var myAtoi = function (str) {
 			str = str.trim();
-			var i = 0,n,sign = "+",numArr = "",num = 0;
+			var i = 0,sign = "",numArr = "",num = 0;
 			if (str[0] == "-") {
 				sign = "-";
 				i++;
 			}else if(str[0] == "+"){
+				sign = "+";
 				i++;
 			}
 			for (i; i < str.length; i++) {
-				n = parseInt(str[i]);
-				if(!isNaN(n)){
+				if(str[i].charCodeAt(0) >= 48 && str[i].charCodeAt(0) <= 57){
 					numArr += n;
 				}else{
-					if(str[i] == "+" || str[i] == "-"){
+					if(sign == "" && numArr.length == 0){
+						//b1
 						return 0;
+					}else{
+						//1b && +1b && +b1
+						break;
 					}
 				}
 			}
 			for (var j = 0; j < numArr.length; j++) {
-				num += parseInt(numArr[j]) * Math.pow(10,numArr.length-(j+1));
+				num += numArr[j] * Math.pow(10,numArr.length-(j+1));
 			}
-			if(num > Math.pow(2,32)-1 || num < -Math.pow(2,32)){
-				return 0;
-			}
-			return sign == "-" ? num * -1 : num;
+			return (sign == "-") ? (num > Math.pow(2,31)) ? Math.pow(2,31)*-1 : num*-1 : (num > Math.pow(2,31)-1) ? Math.pow(2,31)-1 : num;
 		};
-		console.log(myAtoi("-0012a42"));
-		console.log(parseInt("  -0012a42"))
+		console.log(myAtoi("+b1"));
 	</script>
 </body>
 
